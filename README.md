@@ -14,11 +14,27 @@ There are various ways Echo could be deployed.  It could sit in front of a servi
 
 For example, Echo could live on the same host as core and UI Tier, servicing only requests that go from UI tier to core.  In the future Echo could be a superpod level service, and ultimately would live on the same host or same data center as the UI Tier when it’s collocated with the country customers are in.
 
-### How to install?
+### How to use?
 
-To build and install in `/opt/echo`:
+#### Requirements
+OpenSSL and PCRE libraries are required.
 
+Mac OS:
 ```bash
-$ ./bang.sh --prefix=/opt/echo
+$ brew install openssl pcre
 ```
 
+Debian/Ubuntu:
+```bash
+$ apt-get install openssl libssl-dev libpcre3
+```
+
+To build (download and compile OpenResty + Redis):
+```bash
+$ ./bang.sh compile
+```
+
+To run:
+```bash
+$ ./bang.sh run
+```
