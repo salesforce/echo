@@ -8,17 +8,21 @@ OPENRESTY_PACKAGE=openresty-${OPENRESTY_VERSION}
 REDIS_VERSION=stable
 REDIS_PACKAGE=redis-${REDIS_VERSION}
 
+PATH_TMP=/tmp/.echo
+
 PATH_NGINX_CONFIG=conf/nginx.conf
+
 do_build_openresty() {
 	echo "*** building openresty..."
 	pushd .
-	mkdir -p /tmp/.echo/
-	cd /tmp/.echo/
+	rm -rf ${PATH_TMP}
+	mkdir -p ${PATH_TMP}
+	cd ${PATH_TMP}
 	rm -rf ${OPENRESTY_PACKAGE}
 	wget "https://openresty.org/download/${OPENRESTY_PACKAGE}.tar.gz"
 	tar xfzv ${OPENRESTY_PACKAGE}.tar.gz
 	cd ${OPENRESTY_PACKAGE}
-	./configure --with-cc-opt="-I/usr/local/include -I/usr/local/opt/openssl/include -I/usr/local/Cellar/pcre/8.39/include/ -I/usr/local/Cellar/openssl/1.0.2g/include/" --with-ld-opt="-L/usr/local/lib -L/usr/local/Cellar/pcre/8.39/lib -L/usr/local/Cellar/openssl/1.0.2g/lib"
+	./configure --prefix=${PATH_TMP} --with-cc-opt="-I/usr/local/include -I/usr/local/opt/openssl/include -I/usr/local/Cellar/pcre/8.39/include/ -I/usr/local/Cellar/openssl/1.0.2g/include/" --with-ld-opt="-L/usr/local/lib -L/usr/local/Cellar/pcre/8.39/lib -L/usr/local/Cellar/openssl/1.0.2g/lib"
 	make
 	popd
 	echo "*** openresty build done."
@@ -27,6 +31,8 @@ do_build_openresty() {
 do_build_redis() {
 	echo "*** building redis..."
 	pushd .
+	mkdir -p ${PATH_TMP}
+	cd ${PATH_TMP}
 	wget "http://download.redis.io/${REDIS_PACKAGE}.tar.gz"
 	tar xvzf ${REDIS_PACKAGE}.tar.gz
 	cd ${REDIS_PACKAGE}
