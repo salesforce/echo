@@ -8,26 +8,33 @@ OPENRESTY_PACKAGE=openresty-${OPENRESTY_VERSION}
 REDIS_VERSION=stable
 REDIS_PACKAGE=redis-${REDIS_VERSION}
 
-PATH_TMP=/tmp/.echo
+PATH_ECHO=~/echo
+PATH_ECHO_BIN=${PATH_ECHO}/bin
+PATH_INSTALL=${PATH_ECHO}/packages
+PATH_OPENRESTY=${PATH_INSTALL}/${OPENRESTY_PACKAGE}
+PATH_REDIS=${PATH_INSTALL}/${REDIS_PACKAGE}
 
 PATH_NGINX_CONFIG=conf/nginx.conf
+PATH_REDIS_MASTER_CONFIG=conf/redis-master.conf
+PATH_REDIS_SLAVE_1_CONFIG=conf/redis-slave_1.conf
+PATH_REDIS_SLAVE_2_CONFIG=conf/redis-slave_2.conf
 
 do_build_openresty() {
   echo "*** building openresty..."
   pushd .
-  rm -rf ${PATH_TMP}
-  mkdir -p ${PATH_TMP}
-  cd ${PATH_TMP}
+  rm -rf ${PATH_INSTALL}
+  mkdir -p ${PATH_INSTALL}
+  cd ${PATH_INSTALL}
   rm -rf ${OPENRESTY_PACKAGE}
   wget "https://openresty.org/download/${OPENRESTY_PACKAGE}.tar.gz"
   tar xfzv ${OPENRESTY_PACKAGE}.tar.gz
   cd ${OPENRESTY_PACKAGE}
   if [[ `uname` == 'Darwin' ]]; then
-    ./configure --prefix=${PATH_TMP} \
+    ./configure --prefix=${PATH_ECHO} \
              --with-cc-opt="-I /usr/local/include" \
              --with-ld-opt="-L /usr/local/lib"
   elif [[ `uname` == 'linux' ]]; then
-    ./configure --prefix=${PATH_TMP} 
+    ./configure --prefix=${PATH_ECHO} 
   fi
   make
   popd
@@ -37,8 +44,8 @@ do_build_openresty() {
 do_build_redis() {
   echo "*** building redis..."
   pushd .
-  mkdir -p ${PATH_TMP}
-  cd ${PATH_TMP}
+  mkdir -p ${PATH_INSTALL}
+  cd ${PATH_INSTALL}
   wget "http://download.redis.io/${REDIS_PACKAGE}.tar.gz"
   tar xvzf ${REDIS_PACKAGE}.tar.gz
   cd ${REDIS_PACKAGE}
@@ -47,24 +54,34 @@ do_build_redis() {
   echo "*** redis build done."
 }
 
+do_copy_executables() {
+  echo "*** copying executables..."
+  mkdir -p ${PATH_ECHO_BIN}
+  cp -v ${PATH_OPENRESTY}/build/nginx-1.11.2/objs/nginx ${PATH_ECHO_BIN}/
+  cp -v ${PATH_REDIS}/src/redis-server ${PATH_ECHO_BIN}/
+}
+
 do_compile() {
+  echo "*** fetch/build..."
   pushd .
   do_build_openresty
   do_build_redis
+  do_copy_executables
   popd 
   echo "*** done."
 }
 
 do_clean() {
-  echo "*** removing ${PATH_TMP}..."
-  rm -rfv ${PATH_TMP}
+  echo "*** cleaning up..."
+  rm -rfv ${PATH_INSTALL} ${PATH_ECHO_BIN}
   echo "*** done."
 }
 
 do_run() {
-  ${PATH_TMP}/${REDIS_PACKAGE}/src/redis-server --port 7777
-  ${PATH_TMP}/${REDIS_PACKAGE}/src/redis-server --port 7778 slaveof localhost 7777
-  sudo ${PATH_OPENRESTY}/build/nginx-1.11.2/objs/nginx -c ${PATH_NGINX_CONFIG}
+  ${PATH_ECHO_BIN}/redis-server ${PATH_REDIS_MASTER_CONFIG}
+  ${PATH_ECHO_BIN}/redis-server ${PATH_REDIS_SLAVE_1_CONFIG}
+  ${PATH_ECHO_BIN}/redis-server ${PATH_REDIS_SLAVE_2_CONFIG}
+  ${PATH_ECHO_BIN}/nginx -c ${PATH_NGINX_CONFIG}
 }
 
 case "$1" in
