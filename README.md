@@ -2,6 +2,8 @@
 
 ### Overview
 
+Full specification can be found here [Echo - HTTP Reverse Proxy Cache](https://sfdc.co/echo).
+
 Echo is an HTTP Reverse Proxy Cache that reduces request latencies and down stream resource usage by providing a HTTP request/response cache for previously executed remote HTTP calls.  Echo intercepts requests from clients, performs response lookup in the Echo cache, and if found, returns the cached response to the caller.  On a cache miss, the request is forwarded to the specified passthrough service that processes the request. Echo will cache the corresponding response and then return the response to the caller.  On subsequent requests the response contents are served directly from the cache, eliminating the call to the backend service. Cached content can be static or dynamic as Echo provides invalidation capabilities that allow backend services to notify Echo when the cached entry is stale.
 
 Object invalidation matching is done through patterns (regular expressions) allowing bulk invalidations for a org/user/etc. to be possible.  An invalidation API over HTTP is exposed to clients that need to invalidate cached entries.
