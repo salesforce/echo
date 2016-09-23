@@ -10,15 +10,15 @@ REDIS_PACKAGE=redis-${REDIS_VERSION}
 
 PATH_ECHO=~/echo
 PATH_INSTALL=${PATH_ECHO}/pkg
-PATH_OPENRESTY=${PATH_INSTALL}/${OPENRESTY_PACKAGE}
-PATH_NGINX_BIN=${PATH_OPENRESTY}/build/nginx-1.11.2/objs/nginx
+PATH_NGINX_BIN=${PATH_ECHO}/bin/openresty
 PATH_REDIS=${PATH_INSTALL}/${REDIS_PACKAGE}
 PATH_REDIS_BIN=${PATH_REDIS}/src/redis-server
 
-PATH_NGINX_CONFIG=conf/nginx.conf
-PATH_REDIS_MASTER_CONFIG=conf/redis-master.conf
-PATH_REDIS_SLAVE_1_CONFIG=conf/redis-slave_1.conf
-PATH_REDIS_SLAVE_2_CONFIG=conf/redis-slave_2.conf
+PATH_CONFIG=${PATH_ECHO}/conf
+PATH_NGINX_CONFIG=${PATH_CONFIG}/nginx.conf
+PATH_REDIS_MASTER_CONFIG=${PATH_CONFIG}/redis-master.conf
+PATH_REDIS_SLAVE_1_CONFIG=${PATH_CONFIG}/redis-slave_1.conf
+PATH_REDIS_SLAVE_2_CONFIG=${PATH_CONFIG}/redis-slave_2.conf
 
 do_build_openresty() {
   echo "*** building openresty..."
@@ -31,13 +31,14 @@ do_build_openresty() {
   tar xfzv ${OPENRESTY_PACKAGE}.tar.gz
   cd ${OPENRESTY_PACKAGE}
   if [[ `uname` == 'Darwin' ]]; then
-    ./configure  \
+    ./configure --prefix=${PATH_ECHO} \
              --with-cc-opt="-I /usr/local/include" \
              --with-ld-opt="-L /usr/local/lib"
   elif [[ `uname` == 'linux' ]]; then
     ./configure --prefix=${PATH_ECHO} 
   fi
   make
+  make install
   popd
   echo "*** openresty build done."
 }
@@ -55,18 +56,23 @@ do_build_redis() {
   echo "*** redis build done."
 }
 
+do_copy_configs() {
+  cp -r conf ${PATH_ECHO}
+}
+
 do_compile() {
   echo "*** fetch/build..."
   pushd .
   do_build_openresty
   do_build_redis
   popd 
+  do_copy_configs
   echo "*** done."
 }
 
 do_clean() {
   echo "*** cleaning up..."
-  rm -rfv ${PATH_INSTALL} ${PATH_ECHO_BIN}
+  rm -rfv ${PATH_INSTALL} ${PATH_ECHO_BIN} ${PATH_CONFIG}
   echo "*** done."
 }
 
@@ -83,6 +89,9 @@ case "$1" in
     ;;
   compile)
     do_compile
+    ;;
+  copy)
+    do_copy_configs
     ;;
   run)
     do_run
