@@ -56,10 +56,14 @@ do_compile() {
 }
 
 do_clean() {
-  rm -rf ${PATH_TMP}
+  echo "*** removing ${PATH_TMP}..."
+  rm -rfv ${PATH_TMP}
+  echo "*** done."
 }
 
 do_run() {
+  ${PATH_TMP}/${REDIS_PACKAGE}/src/redis-server --port 7777
+  ${PATH_TMP}/${REDIS_PACKAGE}/src/redis-server --port 7778 slaveof localhost 7777
   sudo ${PATH_OPENRESTY}/build/nginx-1.11.2/objs/nginx -c ${PATH_NGINX_CONFIG}
 }
 
