@@ -1,11 +1,31 @@
 # echo
 Invalidate-able transparent reverse proxy cache 
 
-### How to install?
+### How to use?
 
-To build and install in `/opt/echo`:
+#### Requirements
+OpenSSL and PCRE libraries are required.
+
+Mac OS:
 
 ```bash
-$ ./bang.sh --prefix=/opt/echo  
+$ brew install openssl pcre
 ```
 
+Debian/Ubuntu:
+
+```bash
+$ apt-get install openssl libssl-dev libpcre3
+```
+
+To build:
+
+```bash
+$ ./bang.sh compile
+```
+
+To run:
+
+```bash
+$ ./bang.sh run
+```
