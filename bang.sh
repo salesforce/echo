@@ -16,9 +16,7 @@ PATH_REDIS_BIN=${PATH_REDIS}/src/redis-server
 
 PATH_CONFIG=${PATH_ECHO}/conf
 PATH_NGINX_CONFIG=${PATH_CONFIG}/nginx.conf
-PATH_REDIS_MASTER_CONFIG=${PATH_CONFIG}/redis-master.conf
-PATH_REDIS_SLAVE_1_CONFIG=${PATH_CONFIG}/redis-slave_1.conf
-PATH_REDIS_SLAVE_2_CONFIG=${PATH_CONFIG}/redis-slave_2.conf
+PATH_REDIS_CONFIG=${PATH_CONFIG}/redis.conf
 
 do_build_openresty() {
   echo "*** building openresty..."
@@ -77,7 +75,7 @@ do_clean() {
 }
 
 do_run() {
-  ${PATH_REDIS_BIN} ${PATH_REDIS_MASTER_CONFIG}
+  ${PATH_REDIS_BIN} ${PATH_REDIS_CONFIG}
   ${PATH_REDIS_BIN} ${PATH_REDIS_SLAVE_1_CONFIG}
   ${PATH_REDIS_BIN} ${PATH_REDIS_SLAVE_2_CONFIG}
   ${PATH_NGINX_BIN} -c ${PATH_NGINX_CONFIG}
