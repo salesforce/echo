@@ -26,13 +26,27 @@ $ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: tenant-id' 'http://echo.sa
 By default, objects are cached in Redis with this key pattern: `object:${TenantID}:escape_uri(${RequestURI})`; for exmaple, the following call:
 
 ```bash
-$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: 6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC' 'http://echo.salesforce.com/'
+$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: 6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC' 'http://echo.salesforce.com/home/home.jsp'
 ```
+
 results in the followin object in Redis:
 
 ```bash
-$ redis-cli -p 7777 keys '*'
+$ redis-cli keys '*'
 1) "object:6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC:gs0.salesforce.com%2Fhome%2Fhome.jsp"
+```
+
+However, it is possible to overwrite the _key_ used to store cached objects in Redis via the header parameter `Echo-Key`; for exmaple, the following call:
+
+```bash
+$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: 6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC' -H 'Echo-Key: gs0/home/home.jsp' 'http://echo.salesforce.com/home/home.jsp'
+```
+
+results in the followin object in Redis:
+
+```bash
+$ redis-cli keys '*'
+1) "object:6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC:gs0/home/home.jsp"
 ```
 
 ### API
