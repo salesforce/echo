@@ -16,7 +16,9 @@ For example, Echo could live on the same host as core and UI Tier, servicing onl
 
 ### How to use?
 
-Echo behaves as a transparent HTTP proxy when no explicit Echo header parameters exist.  To enable caching, the response must contain the `Echo-Cacheable` header; e.g., `Echo-Tenant: 1`.
+Echo behaves as a transparent HTTP proxy when no explicit Echo header parameters exist.  To enable caching, the response must contain the `Echo-Cacheable` header; e.g., `Echo-Cacheable: 1`.
+
+#### Key naming
 
 By default, objects are cached in Redis with this key pattern: `object:escape_uri(${RequestURI})`; for exmaple, the following call:
 
@@ -38,7 +40,17 @@ $ redis-cli keys '*'
 1) "object:gs0/home/home.jsp"
 ```
 
+#### Object expiry
+
 By default, objects are cached forever (until explicitly invalidated, or evicted by Redis LRU).  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Max-Age`; for example, adding `Echo-Max-Age: 30` to response header results in the cached object to expire (deleted from Redis) after 30 seconds.
+
+#### Explicit invalidation
+
+It is possible for backend services to explicitly invalidate cached objects matching a pattern.  This can be achieve by adding `Echo-Invalidate` header parameter to response.  For example, adding `Echo-Invalidate: *` results in all cached objects to be removed from Echo (Redis); or adding `Echo-Invalidate: gs0/home/*` results in all keys prefixed with `gs0/home/` to be removed.
+
+#### Object graph invalidation
+
+
 
 ### Requirements
 OpenSSL and PCRE libraries are required.
