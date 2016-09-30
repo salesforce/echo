@@ -16,42 +16,29 @@ For example, Echo could live on the same host as core and UI Tier, servicing onl
 
 ### How to use?
 
-Echo behaves as a transparent HTTP proxy when no explicit Echo header parameters exist.  To enable caching, either a request or the response must contain the `Echo-Tenant` header; value being the TenantID to be used for this request/response.
+Echo behaves as a transparent HTTP proxy when no explicit Echo header parameters exist.  To enable caching, the response must contain the `Echo-Cacheable` header; e.g., `Echo-Tenant: 1`.
+
+By default, objects are cached in Redis with this key pattern: `object:escape_uri(${RequestURI})`; for exmaple, the following call:
 
 ```bash
-$ curl -H 'Host: gs0.salesforce.com' 'http://echo.salesforce.com'  # behaves as a transparent proxy
-$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: tenant-id' 'http://echo.salesforce.com/home/home.jsp'  # proxy and cache the response
-```
-
-By default, objects are cached in Redis with this key pattern: `object:${TenantID}:escape_uri(${RequestURI})`; for exmaple, the following call:
-
-```bash
-$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: 6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC' 'http://echo.salesforce.com/home/home.jsp'
+$ curl -H 'Host: gs0.salesforce.com' 'http://echo.salesforce.com/home/home.jsp'
 ```
 
 results in the followin object in Redis:
 
 ```bash
 $ redis-cli keys '*'
-1) "object:6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC:gs0.salesforce.com%2Fhome%2Fhome.jsp"
+1) "object:gs0.salesforce.com%2Fhome%2Fhome.jsp"
 ```
 
-However, it is possible to overwrite the _key_ used to store cached objects in Redis via the header parameter `Echo-Key`; for exmaple, the following call:
-
-```bash
-$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: 6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC' -H 'Echo-Key: gs0/home/home.jsp' 'http://echo.salesforce.com/home/home.jsp'
-```
-
-results in the followin object in Redis:
+However, it is possible to overwrite the _key pattern_ used to store cached objects in Redis via the header parameter `Echo-Key`; for exmaple, adding `Echo-Key: gs0/home/home.jsp` to response header results in the above _curl_ call to be cached in Redis like this:
 
 ```bash
 $ redis-cli keys '*'
-1) "object:6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC:gs0/home/home.jsp"
+1) "object:gs0/home/home.jsp"
 ```
 
-### API
-
-
+By default, objects are cached forever (until explicitly invalidated, or evicted by Redis LRU).  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Max-Age`; for example, adding `Echo-Max-Age: 30` to response header results in the cached object to expire (deleted from Redis) after 30 seconds.
 
 ### Requirements
 OpenSSL and PCRE libraries are required.
