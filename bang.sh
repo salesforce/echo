@@ -23,7 +23,7 @@ do_build_openresty() {
   echo "*** building openresty..."
   pushd .
   cd ${PATH_ARCHIVE}
-  tar xfzv ${OPENRESTY_PACKAGE}.tar.gz
+  tar xfz ${OPENRESTY_PACKAGE}.tar.gz 
   cd ${OPENRESTY_PACKAGE}
   if [[ `uname` == 'Darwin' ]]; then
     ./configure --prefix=${PATH_OPENRESTY} \
@@ -42,7 +42,7 @@ do_build_redis() {
   echo "*** building redis..."
   pushd .
   cd ${PATH_ARCHIVE}
-  tar xvzf ${REDIS_PACKAGE}.tar.gz
+  tar xzf ${REDIS_PACKAGE}.tar.gz
   cd ${REDIS_PACKAGE}
   make
   popd
