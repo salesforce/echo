@@ -48,7 +48,7 @@ By default, objects are cached forever (until explicitly invalidated, or evicted
 
 It is possible for backend services to explicitly invalidate cached objects matching a pattern.  This can be achieved by adding `Echo-Invalidate` header parameter to response.  For example, adding `Echo-Invalidate: *` results in all cached objects to be removed from Echo (Redis); or adding `Echo-Invalidate: gs0/home/*` results in all keys prefixed with `gs0/home/` to be removed.
 
-#### Object dependency graph invalidation
+#### Observeables
 
 Echo provides functionality required to construct and invalidate _object dependency graphs_.  The dependency graph is constructed by adding two header parameters to reponse; first one is a unique name representing the object graph as a whole, and the second one is the pattern to be matched against keys to be used for invalidation. 
 
