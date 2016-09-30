@@ -16,7 +16,30 @@ For example, Echo could live on the same host as core and UI Tier, servicing onl
 
 ### How to use?
 
-#### Requirements
+Echo behaves as a transparent HTTP proxy when no explicit Echo header parameters exist.  To enable caching, either a request or the response must contain the `Echo-Tenant` header; value being the TenantID to be used for this request/response.
+
+```bash
+$ curl -H 'Host: gs0.salesforce.com' 'http://echo.salesforce.com'  # behaves as a transparent proxy
+$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: tenant-id' 'http://echo.salesforce.com/home/home.jsp'  # proxy and cache the response
+```
+
+By default, objects are cached in Redis with this key pattern: `object:${TenantID}:escape_uri(${RequestURI})`; for exmaple, the following call:
+
+```bash
+$ curl -H 'Host: gs0.salesforce.com' -H 'Echo-Tenant: 6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC' 'http://echo.salesforce.com/'
+```
+results in the followin object in Redis:
+
+```bash
+$ redis-cli -p 7777 keys '*'
+1) "object:6F1EC9BD-8CDF-4599-A3B4-DAD71498F5DC:gs0.salesforce.com%2Fhome%2Fhome.jsp"
+```
+
+### API
+
+
+
+### Requirements
 OpenSSL and PCRE libraries are required.
 
 Mac OS:
@@ -29,7 +52,7 @@ Debian/Ubuntu:
 $ apt-get install openssl libssl-dev libpcre3
 ```
 
-To build (download and compile OpenResty + Redis):
+To build (compile and install OpenResty + Redis):
 ```bash
 $ ./bang.sh compile
 ```
