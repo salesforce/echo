@@ -16,8 +16,8 @@ PATH_REDIS=${PATH_ARCHIVE}/${REDIS_PACKAGE}
 PATH_REDIS_BIN=${PATH_REDIS}/src/redis-server
 
 PATH_CONFIG=${PATH_ECHO}/conf
-PATH_NGINX_CONFIG=${PATH_CONFIG}/nginx.conf
-PATH_REDIS_CONFIG=${PATH_CONFIG}/redis.conf
+PATH_NGINX_CONFIG=${PATH_CONFIG}/nginx/echo_nginx.conf
+PATH_REDIS_CONFIG=${PATH_CONFIG}/redis/echo_redis.conf
 
 do_build_openresty() {
   echo "*** building openresty..."
