@@ -50,7 +50,7 @@ It is possible for backend services to explicitly invalidate cached objects matc
 
 #### Observables
 
-Echo provides functionality required to construct and invalidate _object dependency graphs_.  The dependency graph is constructed by adding a header parameter to reponse: `Echo-Observable`; for example, adding `Echo-Observable: homepage:gs0/home/*` results in constructing an observable object graph in Echo called `homepage`.  It is then possible for another response to invalidate the observers by adding the header parameter: `Echo-Notify`; for example: `Echo-Notify: homepage` results in invalidation of all keys matching `gs0/home/*` pattern.
+Echo provides functionality required to construct and invalidate _object dependency graphs_.  The dependency graph is constructed by adding a header parameter to reponse: `Echo-Observe`; for example, adding `Echo-Observe: /sfdc/casp/foo/bar` results in constructing an observable object graph in Echo called `/sfdc/casp/foo/bar`.  It is then possible for another response to invalidate the observers by adding the header parameter: `Echo-Notify`; for example: `Echo-Notify: /sfdc/casp/foo/bar` results in invalidation of all keys observing the given name.
 
 ### Requirements
 OpenSSL and PCRE libraries are required.
