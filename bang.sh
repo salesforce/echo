@@ -29,7 +29,7 @@ do_build_openresty() {
     ./configure --prefix=${PATH_OPENRESTY} \
              --with-cc-opt="-I /usr/local/include" \
              --with-ld-opt="-L /usr/local/lib"
-  elif [[ `uname` == 'linux' ]]; then
+  elif [[ `uname` == 'Linux' ]]; then
     ./configure --prefix=${PATH_OPENRESTY} 
   fi
   make
