@@ -62,7 +62,7 @@ $ brew install openssl pcre
 
 Debian/Ubuntu:
 ```bash
-$ apt-get install openssl libssl-dev libpcre3
+$ apt-get install openssl libssl-dev libpcre3-dev
 ```
 
 To build (compile and install OpenResty + Redis):
