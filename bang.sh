@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -21,31 +21,27 @@ PATH_REDIS_CONFIG=${PATH_CONFIG}/redis/echo_redis.conf
 
 do_build_openresty() {
   echo "*** building openresty..."
-  pushd .
   cd ${PATH_ARCHIVE}
   tar xfz ${OPENRESTY_PACKAGE}.tar.gz 
   cd ${OPENRESTY_PACKAGE}
-  if [[ `uname` == 'Darwin' ]]; then
+  if [ "$(uname)" == 'Darwin' ]; then
     ./configure --prefix=${PATH_OPENRESTY} \
              --with-cc-opt="-I /usr/local/include" \
              --with-ld-opt="-L /usr/local/lib"
-  elif [[ `uname` == 'Linux' ]]; then
+  elif [ "$(uname)" == 'Linux' ]; then
     ./configure --prefix=${PATH_OPENRESTY} 
   fi
   make
   make install
-  popd
   echo "*** openresty build done."
 }
 
 do_build_redis() {
   echo "*** building redis..."
-  pushd .
   cd ${PATH_ARCHIVE}
   tar xzf ${REDIS_PACKAGE}.tar.gz
   cd ${REDIS_PACKAGE}
   make
-  popd
   echo "*** redis build done."
 }
 
@@ -59,12 +55,10 @@ do_copy_archive() {
 
 do_compile() {
   echo "*** fetch/build..."
-  pushd .
   do_clean
   do_copy_archive
   do_build_openresty
   do_build_redis
-  popd 
   do_copy_configs
   echo "*** done."
 }
@@ -97,4 +91,7 @@ case "$1" in
   run)
     do_run
     ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+    exit 1
 esac
