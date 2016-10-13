@@ -53,16 +53,6 @@ do_copy_archive() {
   cp -r archive ${PATH_ARCHIVE}
 }
 
-do_compile() {
-  echo "*** fetch/build..."
-  do_clean
-  do_copy_archive
-  do_build_openresty
-  do_build_redis
-  do_copy_configs
-  echo "*** done."
-}
-
 do_clean() {
   echo "*** cleaning up..."
   rm -rfv ${PATH_ARCHIVE} ${PATH_ECHO_BIN} ${PATH_CONFIG}
@@ -99,7 +89,10 @@ case "$1" in
     do_clean
     ;;
   compile)
-    do_compile
+    do_copy_archive
+    do_copy_configs
+    do_build_openresty
+    do_build_redis
     ;;
   copy_archive)
     do_copy_archive
@@ -130,6 +123,7 @@ case "$1" in
     do_stop_nginx
     ;;
   *)
-    echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+    echo $"Usage: $0 {clean|compile|restart_nginx|restart_redis}"
     exit 1
 esac
+
