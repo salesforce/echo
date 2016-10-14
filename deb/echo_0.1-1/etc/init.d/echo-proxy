@@ -13,7 +13,7 @@ PATH=/sbin:/bin:/opt/echo/bin
 . /lib/lsb/init-functions
 
 NAME=echo-proxy
-DAEMON=/opt/echo/bin/echo-proxy
+DAEMON=/opt/echo/openresty/bin/openresty
 DAEMON_OPTS="-c /etc/echo/conf/nginx/echo_nginx.conf"
 PIDFILE=/var/run/echo/echo-proxy.pid
 
