@@ -14,9 +14,21 @@ There are various ways Echo could be deployed.  It could sit in front of a servi
 
 For example, Echo could live on the same host as core and UI Tier, servicing only requests that go from UI tier to core.  In the future Echo could be a superpod level service, and ultimately would live on the same host or same data center as the UI Tier when it’s collocated with the country customers are in.
 
-### How to use?
+### Installation
 
-Echo behaves as a transparent HTTP proxy when no explicit Echo header parameters exist.  To enable caching, the response must contain the `Echo-Cacheable` header; e.g., `Echo-Cacheable: 1`.
+Download and install Debian package:
+
+```bash
+$ curl 'https://git.soma.salesforce.com/CASP/echo/raw/master/dist/echo_0.1-1.deb' -o echo_0.1-1.deb
+$ dpkg -i echo_0.1-1.deb
+```
+
+To start Echo:
+
+```bash
+$ service echo-cache start
+$ service echo-proxy start
+```
 
 #### Key naming
 
