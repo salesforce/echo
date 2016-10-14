@@ -19,7 +19,8 @@ For example, Echo could live on the same host as core and UI Tier, servicing onl
 Download and install Debian package:
 
 ```bash
-$ curl 'https://git.soma.salesforce.com/CASP/echo/raw/master/dist/echo_0.1-1.deb' -o echo_0.1-1.deb
+$ git clone git@git.soma.salesforce.com:CASP/echo.git
+$ cd echo/dist
 $ dpkg -i echo_0.1-1.deb
 ```
 
