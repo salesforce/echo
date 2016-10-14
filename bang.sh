@@ -39,10 +39,6 @@ do_build_redis() {
   echo "*** redis build done."
 }
 
-do_copy_configs() {
-  cp -r conf ${PATH_ECHO}
-}
-
 do_copy_archive() {
   cp -r archive ${PATH_ARCHIVE}
 }
@@ -84,15 +80,11 @@ case "$1" in
     ;;
   compile)
     do_copy_archive
-    do_copy_configs
     do_build_openresty
     do_build_redis
     ;;
   copy_archive)
     do_copy_archive
-    ;;
-  copy_config)
-    do_copy_configs
     ;;
   restart_nginx)
     do_stop_nginx
