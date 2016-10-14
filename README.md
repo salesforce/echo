@@ -16,14 +16,48 @@ For example, Echo could live on the same host as core and UI Tier, servicing onl
 
 ### How to use?
 
-Echo behaves as a transparent HTTP proxy when no explicit Echo header parameters exist.  To enable caching, the response must contain the `Echo-Cacheable` header; e.g., `Echo-Cacheable: 1`.
+Download and install Debian package:
+
+```bash
+$ git clone git@git.soma.salesforce.com:CASP/echo.git
+$ cd echo/dist
+$ sudo dpkg -i echo_0.1-1.deb
+```
+
+To start Echo:
+
+```bash
+$ sudo service echo-cache start
+$ sudo service echo-proxy start
+```
+
+To stop Echo:
+
+```bash
+$ sudo service echo-cache stop
+$ sudo service echo-proxy stop
+```
+
+To uninstall Echo:
+
+```bash
+$ sudo apt-get remove echo -y
+```
+
+To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
+
+```bash
+$ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
+```
+
+The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
 
 #### Key naming
 
 By default, objects are cached in Redis with this key pattern: `object:escape_uri(${RequestURI})`; for exmaple, the following call:
 
 ```bash
-$ curl -H 'Host: gs0.salesforce.com' 'http://echo.salesforce.com/home/home.jsp'
+$ curl -H 'Host: gs0.salesforce.com' 'http://127.0.0.1/home/home.jsp'
 ```
 
 results in the followin object in Redis:
@@ -42,7 +76,7 @@ $ redis-cli keys '*'
 
 #### Object expiry
 
-By default, objects are cached forever (until explicitly invalidated, or evicted by Redis LRU).  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Max-Age`; for example, adding `Echo-Max-Age: 30` to response header results in the cached object to expire (deleted from Redis) after 30 seconds.
+By default, objects in cache are expired respectful of Cache-Control header.  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Expire`; for example, adding `Echo-Expire: 30` to response header results in the cached object to expire (deleted from Redis) after 30 seconds.
 
 #### Explicit invalidation
 
@@ -52,7 +86,7 @@ It is possible for backend services to explicitly invalidate cached objects matc
 
 Echo provides functionality required to construct and invalidate _object dependency graphs_.  The dependency graph is constructed by adding a header parameter to reponse: `Echo-Observe`; for example, adding `Echo-Observe: /sfdc/casp/foo/bar` results in constructing an observable object graph in Echo called `/sfdc/casp/foo/bar`.  It is then possible for another response to invalidate the observers by adding the header parameter: `Echo-Notify`; for example: `Echo-Notify: /sfdc/casp/foo/bar` results in invalidation of all keys observing the given name.
 
-### Requirements
+### Development
 OpenSSL and PCRE libraries are required.
 
 Mac OS:
@@ -62,7 +96,7 @@ $ brew install openssl pcre
 
 Debian/Ubuntu:
 ```bash
-$ apt-get install openssl libssl-dev libpcre3-dev
+$ apt-get install libssl-dev libpcre3-dev
 ```
 
 To build (compile and install OpenResty + Redis):
