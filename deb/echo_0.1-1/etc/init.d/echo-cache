@@ -1,0 +1,46 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          echo-cache
+# Required-Start:    
+# Required-Stop:
+# Default-Start:
+# Default-Stop:
+# Short-Description: echo-cache store.
+### END INIT INFO
+
+PATH=/opt/echo/bin
+
+. /lib/lsb/init-functions
+
+NAME=echo-cache
+DAEMON=/opt/echo/bin/echo-cache
+PIDFILE=/var/run/echo-cache.pid
+
+test -x $DAEMON || exit 5
+
+do_start () {
+  if [ -e $PIDFILE ]; then
+    status_of_proc -p $PIDFILE $DAEMON "$NAME process" && status="0" || status="$?"
+    if [ $status = "0" ]; then
+      exit # Exit
+    fi
+  fi
+  log_daemon_msg "Starting the process" "$NAME"
+  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON ; then
+    log_end_msg 0
+  else
+    log_end_msg 1
+  fi
+}
+
+case "$1" in
+  start)
+    do_start
+    ;;
+
+  *)
+    echo "Usage: $0 start|stop" >&2
+    exit 3
+    ;;
+
+esac
