@@ -1,35 +1,76 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          single
-# Required-Start:    $local_fs $all killprocs
+# Provides:          echo-proxy
+# Required-Start:    
 # Required-Stop:
-# Default-Start:     1
+# Default-Start:
 # Default-Stop:
-# Short-Description: executed by init(8) upon entering runlevel 1 (single).
+# Short-Description: echo-proxy service.
 ### END INIT INFO
 
-PATH=/sbin:/bin
+PATH=/opt/echo/bin
 
 . /lib/lsb/init-functions
 
+NAME=echo-proxy
+DAEMON=/opt/echo/bin/echo-proxy
+PIDFILE=/var/run/echo-proxy.pid
+
+test -x $DAEMON || exit 5
+
 do_start () {
-	log_action_msg "Will now switch to single-user mode"
-	exec init -t1 S
+  if [ -e $PIDFILE ]; then
+    status_of_proc -p $PIDFILE $DAEMON "$NAME process" && status="0" || status="$?"
+    if [ $status = "0" ]; then
+      exit # Exit
+    fi
+  fi
+  log_daemon_msg "Starting the process" "$NAME"
+  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON ; then
+    log_end_msg 0
+  else
+    log_end_msg 1
+  fi
+}
+
+do_stop() {
+  if [ -e $PIDFILE ]; then
+    status_of_proc -p $PIDFILE $DAEMON "Stoppping the $NAME process" && status="0" || status="$?"
+    if [ "$status" = 0 ]; then
+      start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE /bin/rm -rf $PIDFILE
+    fi
+  else
+    log_daemon_msg "$NAME process is not running"
+    log_end_msg 0
+  fi
+}
+
+do_status() {
+  if [ -e $PIDFILE ]; then
+    status_of_proc -p $PIDFILE $DAEMON "$NAME process" && exit 0 || exit $?
+  else
+    log_daemon_msg "$NAME Process is not running"
+    log_end_msg 0
+  fi
 }
 
 case "$1" in
   start)
-	do_start
-	;;
-  restart|reload|force-reload)
-	echo "Error: argument '$1' not supported" >&2
-	exit 3
-	;;
+    do_start
+    ;;
+
   stop)
-	# No-op
-	;;
+    do_stop
+    ;;
+  restart)
+    $0 stop && sleep 2 && $0 start
+    ;;
+  status)
+    do_status
+    ;;
   *)
-	echo "Usage: $0 start|stop" >&2
-	exit 3
-	;;
+    echo "Usage: $0 {start|stop|restart|reload|status}"
+    exit 2
+  ;;
 esac
+
