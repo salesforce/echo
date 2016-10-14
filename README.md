@@ -56,7 +56,7 @@ The response from the above call should contain header parameter `Echo-Cache-Sta
 By default, objects are cached in Redis with this key pattern: `object:escape_uri(${RequestURI})`; for exmaple, the following call:
 
 ```bash
-$ curl -H 'Host: gs0.salesforce.com' 'http://echo.salesforce.com/home/home.jsp'
+$ curl -H 'Host: gs0.salesforce.com' 'http://127.0.0.1/home/home.jsp'
 ```
 
 results in the followin object in Redis:
