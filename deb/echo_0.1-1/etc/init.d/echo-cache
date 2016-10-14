@@ -8,7 +8,7 @@
 # Short-Description: echo-cache store.
 ### END INIT INFO
 
-PATH=/sbin:/bin:/opt/echo/bin
+PATH=/sbin:/bin:/opt/echo/bin:/usr/bin
 
 . /lib/lsb/init-functions
 
@@ -16,6 +16,8 @@ NAME=echo-cache
 DAEMON=/opt/echo/bin/echo-cache
 DAEMON_OPTS="/etc/echo/conf/redis/echo_redis.conf"
 PIDFILE=/var/run/echo/echo-cache.pid
+USERID=$(id -u nobody)
+GROUPID=$(id -g nobody)
 
 test -x $DAEMON || exit 5
 
@@ -27,7 +29,7 @@ do_start () {
     fi
   fi
   log_daemon_msg "Starting the process" "$NAME"
-  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS ; then
+  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON --chuid $USERID:$GROUPID -- $DAEMON_OPTS ; then
     log_end_msg 0
   else
     log_end_msg 1
