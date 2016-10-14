@@ -8,7 +8,7 @@ OPENRESTY_PACKAGE=openresty-${OPENRESTY_VERSION}
 REDIS_VERSION=stable
 REDIS_PACKAGE=redis-${REDIS_VERSION}
 
-PATH_ECHO=~/echo
+PATH_ECHO=/opt/echo
 PATH_OPENRESTY=${PATH_ECHO}/openresty
 PATH_ARCHIVE=${PATH_ECHO}/archive
 PATH_NGINX_BIN=${PATH_OPENRESTY}/bin/openresty
@@ -24,13 +24,7 @@ do_build_openresty() {
   cd ${PATH_ARCHIVE}
   tar xfz ${OPENRESTY_PACKAGE}.tar.gz 
   cd ${OPENRESTY_PACKAGE}
-  if [ "$(uname)" == 'Darwin' ]; then
-    ./configure --prefix=${PATH_OPENRESTY} \
-             --with-cc-opt="-I /usr/local/include" \
-             --with-ld-opt="-L /usr/local/lib"
-  elif [ "$(uname)" == 'Linux' ]; then
-    ./configure --prefix=${PATH_OPENRESTY} 
-  fi
+  ./configure --prefix=${PATH_OPENRESTY} 
   make
   make install
   echo "*** openresty build done."
