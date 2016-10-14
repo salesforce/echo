@@ -17,7 +17,7 @@ do_build_openresty() {
   cd ${PATH_ARCHIVE}
   tar xfz ${OPENRESTY_PACKAGE}.tar.gz 
   cd ${OPENRESTY_PACKAGE}
-  ./configure --prefix=${PATH_OPENRESTY} 
+  ./configure --prefix=${PATH_OPENRESTY} --error-log-path=/var/log/echo-nginx-error.log --http-log-path=/var/log/echo-nginx-access.log
   make
   make install
   echo "*** openresty build done."
