@@ -8,7 +8,7 @@
 # Short-Description: echo-cache store.
 ### END INIT INFO
 
-PATH=/opt/echo/bin
+PATH=/sbin:/bin:/opt/echo/bin
 
 . /lib/lsb/init-functions
 
