@@ -21,27 +21,27 @@ Download and install Debian package:
 ```bash
 $ git clone git@git.soma.salesforce.com:CASP/echo.git
 $ cd echo/dist
-$ dpkg -i echo_0.1-1.deb
+$ sudo dpkg -i echo_0.1-1.deb
 ```
 
 To start Echo:
 
 ```bash
-$ service echo-cache start
-$ service echo-proxy start
+$ sudo service echo-cache start
+$ sudo service echo-proxy start
 ```
 
 To stop Echo:
 
 ```bash
-$ service echo-cache stop
-$ service echo-proxy stop
+$ sudo service echo-cache stop
+$ sudo service echo-proxy stop
 ```
 
 To uninstall Echo:
 
 ```bash
-$ apt-get remove echo -y
+$ sudo apt-get remove echo -y
 ```
 
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
