@@ -14,6 +14,7 @@ PATH=/sbin:/bin:/opt/echo/bin
 
 NAME=echo-proxy
 DAEMON=/opt/echo/bin/echo-proxy
+DAEMON_OPTS="-la '/folder with space/'"
 PIDFILE=/var/run/echo-proxy.pid
 
 test -x $DAEMON || exit 5
@@ -26,7 +27,7 @@ do_start () {
     fi
   fi
   log_daemon_msg "Starting the process" "$NAME"
-  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON ; then
+  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_OPTS ; then
     log_end_msg 0
   else
     log_end_msg 1
