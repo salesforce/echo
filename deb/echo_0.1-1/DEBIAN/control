@@ -3,7 +3,7 @@ Version: 0.1-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.17), libpcre3 (>= 1:8.12), libssl1.0.0 (>= 1.0.0)
+Depends: libc6 (>= 2.17), libpcre3, libssl1.0.0 (>= 1.0.0)
 Maintainer: Paymon Teyer<pteyer@salesforce.com>
 Description: Echo - HTTP Reverse Proxy Cache
  "This may seem like a devilish ploy, but its one way to bring the proceedings to an end."
