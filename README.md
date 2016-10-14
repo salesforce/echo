@@ -38,9 +38,18 @@ $ service echo-proxy stop
 ```
 
 To uninstall Echo:
+
 ```bash
 $ apt-get remove echo -y
 ```
+
+To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
+
+```bash
+$ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
+```
+
+The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
 
 #### Key naming
 
@@ -66,7 +75,7 @@ $ redis-cli keys '*'
 
 #### Object expiry
 
-By default, objects are cached forever (until explicitly invalidated, or evicted by Redis LRU).  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Max-Age`; for example, adding `Echo-Max-Age: 30` to response header results in the cached object to expire (deleted from Redis) after 30 seconds.
+By default, objects in cache are expired respectful of Cache-Control header.  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Expire`; for example, adding `Echo-Expire: 30` to response header results in the cached object to expire (deleted from Redis) after 30 seconds.
 
 #### Explicit invalidation
 
