@@ -1,0 +1,30 @@
+set init
+set daemon 3  # check every 3 seconds
+set logfile /var/log/monit.log
+set idfile /var/lib/monit/id
+set statefile /var/lib/monit/state
+set mailserver smtp.gmail.com port 465
+username "sfdc.echo@gmail.com" password "CasperTheFriendlyGhost"
+using tlsv1 with timeout 30 seconds
+set eventqueue
+basedir /var/lib/monit/events 
+slots 100
+alerts if the the mail-format
+set httpd port 2812 
+allow admin:echo
+'admin' with password 'echo'
+
+check process redis-server with pidfile /var/run/redis.pid
+  start program = "/etc/init.d/redis-server start"
+  stop program  = "/etc/init.d/redis-server stop"
+  if 1 restarts within 1 cycles then alert 
+  alert pteyer@salesforce.com { nonexist }
+
+# check process openresty with pidfile /var/run/echo-proxy.pid
+#   start program = "/etc/init.d/echo-proxy start"
+#   stop program  = "/etc/init.d/echo-proxy stop"
+#   if 1 restarts within 1 cycles then alert 
+#   alert pteyer@salesforce.com { nonexist }
+
+include /etc/monit/conf.d/*
+

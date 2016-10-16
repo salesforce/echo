@@ -8,13 +8,13 @@
 # Short-Description: echo-proxy service.
 ### END INIT INFO
 
-PATH=/sbin:/bin:/opt/echo/bin
+PATH=/sbin:/bin
 
 . /lib/lsb/init-functions
 
 NAME=echo-proxy
 DAEMON=/usr/local/openresty/bin/openresty
-DAEMON_OPTS=""
+DAEMON_ARGS="-c /etc/nginx.conf"
 PIDFILE=/var/run/echo-proxy.pid
 
 test -x $DAEMON || exit 5
@@ -27,7 +27,7 @@ do_start () {
     fi
   fi
   log_daemon_msg "Starting the process" "$NAME"
-  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON  -- $DAEMON_OPTS ; then
+  if start-stop-daemon --start --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS ; then
     log_end_msg 0
   else
     log_end_msg 1
