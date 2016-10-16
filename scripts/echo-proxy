@@ -15,7 +15,7 @@ PATH=/sbin:/bin:/opt/echo/bin
 NAME=echo-proxy
 DAEMON=/usr/local/openresty/bin/openresty
 DAEMON_OPTS=""
-PIDFILE=/var/run/echo/echo-proxy.pid
+PIDFILE=/var/run/echo-proxy.pid
 
 test -x $DAEMON || exit 5
 
