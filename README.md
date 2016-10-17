@@ -19,9 +19,10 @@ $ cd echo/
 $ sudo docker build -t sfdc/echo -f Dockerfile .
 ```
 
-To start Echo and expose port 80 for HTTP and 2812 for [monitoring](http://127.0.0.1:2812/):
+To start Echo and expose port 80 for HTTP proxy, 2812 for [monitoring](http://127.0.0.1:2812/), 
+and 3891 for [Redis](http://127.0.0.1:3891/):
 ```bash
-$ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 sfdc/echo
+$ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 --publish=3891:3891 sfdc/echo
 ```
 
 
