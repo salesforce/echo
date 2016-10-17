@@ -10,7 +10,7 @@ set eventqueue
 basedir /var/lib/monit/events 
 slots 100
 set httpd port 2812 
-allow admin:monit
+allow admin:echo
 
 check process redis matching "/usr/bin/redis-server"
   start program = "/etc/init.d/redis-server start" with timeout 5 seconds
