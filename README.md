@@ -24,21 +24,19 @@ To start Echo and expose port 80 for HTTP and 2812 for monitoring:
 $ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 sfdc/echo
 ```
 
-To attach to the docker and run shell:
+To attach to the docker and run shell or tail access/error logs:
 ```bash
 $ sudo docker exec -it echo /bin/bash
+$ sudo docker exec -it echo tail -f /var/log/nginx-access.log
+$ sudo docker exec -it echo tail -f /var/log/nginx-error.log
 ```
 
-To stop/kill/restart Echo's docker:
+To stop/kill/restart/remove Echo's docker:
 ```bash
 $ sudo docker stop echo
 $ sudo docker kill echo
 $ sudo docker restart echo
-```
-
-To remove Echo's docker:
-```bash
-$ sudo docker rmi -f $(sudo docker images echo -a -q)
+$ sudo docker rm echo
 ```
 
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
