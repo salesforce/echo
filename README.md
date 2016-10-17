@@ -46,23 +46,19 @@ $ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
 
 The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
 
-#### Key naming
+#### Naming
 
 By default, objects are cached in Redis with this key pattern: `object:escape_uri(${RequestURI})`; for exmaple, the following call:
-
 ```bash
 $ curl -H 'Host: gs0.salesforce.com' 'http://127.0.0.1/home/home.jsp'
 ```
-
-results in the followin object in Redis:
-
+results in the following object in Redis:
 ```bash
 $ redis-cli keys '*'
 1) "object:gs0.salesforce.com%2Fhome%2Fhome.jsp"
 ```
 
 However, it is possible to overwrite the _key pattern_ used to store cached objects in Redis via the header parameter `Echo-Key`; for exmaple, adding `Echo-Key: gs0/home/home.jsp` to response header results in the above _curl_ call to be cached in Redis like this:
-
 ```bash
 $ redis-cli keys '*'
 1) "object:gs0/home/home.jsp"
@@ -70,7 +66,7 @@ $ redis-cli keys '*'
 
 #### Object expiry
 
-By default, objects in cache are expired respectful of Cache-Control header.  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Expire`; for example, adding `Echo-Expire: 30` to response header results in the cached object to expire (deleted from Redis) after 30 seconds.
+By default, objects in cache are expired respectful of Cache-Control header.  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Expire`; for example, adding `Echo-Expire: 30` to response header results in the cached objects to expire (deleted from Redis) after 30 seconds.
 
 #### Explicit invalidation
 
@@ -79,26 +75,3 @@ It is possible for backend services to explicitly invalidate cached objects matc
 #### Observables
 
 Echo provides functionality required to construct and invalidate _object dependency graphs_.  The dependency graph is constructed by adding a header parameter to reponse: `Echo-Observe`; for example, adding `Echo-Observe: /sfdc/casp/foo/bar` results in constructing an observable object graph in Echo called `/sfdc/casp/foo/bar`.  It is then possible for another response to invalidate the observers by adding the header parameter: `Echo-Notify`; for example: `Echo-Notify: /sfdc/casp/foo/bar` results in invalidation of all keys observing the given name.
-
-### Development
-OpenSSL and PCRE libraries are required.
-
-Mac OS:
-```bash
-$ brew install openssl pcre
-```
-
-Debian/Ubuntu:
-```bash
-$ apt-get install libssl-dev libpcre3-dev
-```
-
-To build (compile and install OpenResty + Redis):
-```bash
-$ ./bang.sh compile
-```
-
-To run:
-```bash
-$ ./bang.sh run
-```
