@@ -44,6 +44,23 @@ $ sudo docker rm echo
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
 ```bash
 $ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
+> GET / HTTP/1.1
+> User-Agent: curl/7.35.0
+> Accept: */*
+> Host: www.vim.org
+>
+HTTP/1.1 200 OK
+* Server openresty/1.11.2.1 is not blacklisted
+Server: openresty/1.11.2.1
+Date: Mon, 17 Oct 2016 20:46:52 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Host
+Cache-Control: max-age=172800
+Expires: Wed, 19 Oct 2016 20:46:52 GMT
+Echo-Cache-Status: MISS
+...
 ```
 
 The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
