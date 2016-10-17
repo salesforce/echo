@@ -7,8 +7,11 @@ MAINTAINER Paymon Teyer <pteyer@salesforce.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-RUN apt-get install redis-server -y
+RUN apt-get install redis-server libevent-dev -y
 RUN apt-get install monit -y
+
+ADD webdis/ /opt/webdis/
+RUN cd /opt/webdis && make clean all
 
 ADD conf/redis.conf /etc/redis/redis.conf
 RUN chmod 0664 /etc/redis/redis.conf

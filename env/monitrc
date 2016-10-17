@@ -20,14 +20,22 @@ check process redis matching "/usr/bin/redis-server"
   alert pteyer@salesforce.com { nonexist }
   group redis
 
- check process nginx matching "/usr/local/openresty/bin/openresty"
-   start program = "/usr/local/openresty/bin/openresty" with timeout 5 seconds
-   stop program  = "/usr/local/openresty/bin/openresty -s quit" with timeout 5 seconds
-   if 1 restarts within 1 cycles then alert 
-   if failed host 127.0.0.1 port 80 then restart
-   if cpu is greater than 60% for 2 cycles then alert
-   if cpu > 80% for 5 cycles then restart 
-   if 10 restarts within 10 cycles then timeout
-   alert pteyer@salesforce.com { nonexist }
+check process webdis matching "/opt/webdis/webdis"
+  start program = "/opt/webdis/webdis /opt/webdis/webdis.json" with timeout 5 seconds
+  stop program  = "pkill webdis" with timeout 5 seconds
+  if failed host 127.0.0.1 port 7379 then restart
+  if 1 restarts within 1 cycles then alert 
+  alert pteyer@salesforce.com { nonexist }
+  group redis
+
+check process nginx matching "/usr/local/openresty/bin/openresty"
+  start program = "/usr/local/openresty/bin/openresty" with timeout 5 seconds
+  stop program  = "/usr/local/openresty/bin/openresty -s quit" with timeout 5 seconds
+  if 1 restarts within 1 cycles then alert 
+  if failed host 127.0.0.1 port 80 then restart
+  if cpu is greater than 60% for 2 cycles then alert
+  if cpu > 80% for 5 cycles then restart 
+  if 10 restarts within 10 cycles then timeout
+  alert pteyer@salesforce.com { nonexist }
 
 include /etc/monit/conf.d/*
