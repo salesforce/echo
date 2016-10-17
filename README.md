@@ -19,10 +19,13 @@ $ cd echo/
 $ sudo docker build -t sfdc/echo -f Dockerfile .
 ```
 
-To start Echo and expose port 80 for HTTP and 2812 for monitoring:
+To start Echo and expose port 80 for HTTP proxy, 2812 for [monitoring](http://127.0.0.1:2812/), 
+and 3891 for [Redis](http://127.0.0.1:3891/):
 ```bash
-$ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 sfdc/echo
+$ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 --publish=3891:3891 sfdc/echo
 ```
+
+
 
 To attach to the docker and run shell or tail access/error logs:
 ```bash
@@ -42,6 +45,23 @@ $ sudo docker rm echo
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
 ```bash
 $ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
+> GET / HTTP/1.1
+> User-Agent: curl/7.35.0
+> Accept: */*
+> Host: www.vim.org
+>
+HTTP/1.1 200 OK
+* Server openresty/1.11.2.1 is not blacklisted
+Server: openresty/1.11.2.1
+Date: Mon, 17 Oct 2016 20:46:52 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Host
+Cache-Control: max-age=172800
+Expires: Wed, 19 Oct 2016 20:46:52 GMT
+Echo-Cache-Status: MISS
+...
 ```
 
 The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
