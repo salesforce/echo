@@ -16,22 +16,24 @@ Clone repository and build docker:
 ```bash
 $ git clone git@git.soma.salesforce.com:CASP/echo.git
 $ cd echo/
-$ sudo docker build -t echo -f Dockerfile .
+$ sudo docker build -t sfdc/echo -f Dockerfile .
 ```
 
 To start Echo and expose port 80 for HTTP and 2812 for monitoring:
 ```bash
-$ sudo docker run --publish=80:80 --publish=2812:2812 echo &> echo_docker.log &
+$ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 sfdc/echo
 ```
 
 To attach to the docker and run shell:
 ```bash
-$ sudo docker exec -it $(sudo docker ps -a -q --filter ancestor=echo) /bin/bash
+$ sudo docker exec -it echo /bin/bash
 ```
 
-To stop Echo's docker:
+To stop/kill/restart Echo's docker:
 ```bash
-$ sudo docker stop $(sudo docker ps -a -q --filter ancestor=echo)
+$ sudo docker stop echo
+$ sudo docker kill echo
+$ sudo docker restart echo
 ```
 
 To remove Echo's docker:
@@ -46,9 +48,10 @@ $ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
 
 The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
 
-Access logs and error logs can be found at:
+Access logs and error logs can be found inside the docker:
 ```bash
-
+$ sudo docker exec -it $(sudo docker ps -a -q --filter ancestor=echo) tail -f /var/log/nginx-access.log
+$ sudo docker exec -it $(sudo docker ps -a -q --filter ancestor=echo) tail -f /var/log/nginx-error.log
 ```
 
 #### Key naming
