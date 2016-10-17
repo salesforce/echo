@@ -13,21 +13,33 @@ Cached entries will be stored in Redis, which can be set-up in a Master-Slave co
 ### How to use?
 
 Clone repository and build docker:
-
 ```bash
 $ git clone git@git.soma.salesforce.com:CASP/echo.git
 $ cd echo/
-$ sudo docker build -t echo -f Dockerfile .
+$ sudo docker build -t sfdc/echo -f Dockerfile .
 ```
 
-To start Echo and expose docker's port 80 on parent host:
-
+To start Echo and expose port 80 for HTTP and 2812 for monitoring:
 ```bash
-$ sudo docker run --publish=80:80 echo
+$ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 sfdc/echo
+```
+
+To attach to the docker and run shell or tail access/error logs:
+```bash
+$ sudo docker exec -it echo /bin/bash
+$ sudo docker exec -it echo tail -f /var/log/nginx-access.log
+$ sudo docker exec -it echo tail -f /var/log/nginx-error.log
+```
+
+To stop/kill/restart/remove Echo's docker:
+```bash
+$ sudo docker stop echo
+$ sudo docker kill echo
+$ sudo docker restart echo
+$ sudo docker rm echo
 ```
 
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
-
 ```bash
 $ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
 ```
