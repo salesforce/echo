@@ -16,6 +16,11 @@ RUN chmod 0664 /etc/redis/redis.conf
 ADD conf/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 RUN chmod 0664 /usr/local/openresty/nginx/conf/nginx.conf
 
+ADD env/lua/lib/resty/evp.lua /usr/local/openresty/lualib/resty/evp.lua
+ADD env/lua/lib/resty/hmac.lua /usr/local/openresty/lualib/resty/hmac.lua
+ADD env/lua/lib/resty/jwt.lua /usr/local/openresty/lualib/resty/jwt.lua
+ADD env/lua/lib/resty/jwt-validators.lua /usr/local/openresty/lualib/resty/jwt-validators.lua
+
 ADD env/monitrc /etc/monit/monitrc
 RUN chmod -R 700 /etc/monit/monitrc
 
