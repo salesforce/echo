@@ -12,32 +12,18 @@ Cached entries will be stored in Redis, which can be set-up in a Master-Slave co
 
 ### How to use?
 
-Download and install Debian package:
+Clone repository and build docker:
 
 ```bash
 $ git clone git@git.soma.salesforce.com:CASP/echo.git
-$ cd echo/dist
-$ sudo dpkg -i echo_0.1-1.deb
+$ cd echo/
+$ sudo docker build -t echo -f Dockerfile .
 ```
 
-To start Echo:
+To start Echo and expose docker's port 80 on parent host:
 
 ```bash
-$ sudo service echo-cache start
-$ sudo service echo-proxy start
-```
-
-To stop Echo:
-
-```bash
-$ sudo service echo-cache stop
-$ sudo service echo-proxy stop
-```
-
-To uninstall Echo:
-
-```bash
-$ sudo apt-get remove echo -y
+$ sudo docker run --publish=80:80 echo
 ```
 
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
