@@ -19,9 +19,9 @@ $ cd echo/
 $ sudo docker build -t echo -f Dockerfile .
 ```
 
-To start Echo and expose port 80 for HTTP, 2812 for monitoring, 6379 for Redis:
+To start Echo and expose port 80 for HTTP and 2812 for monitoring:
 ```bash
-$ sudo docker run --publish=80:80 --publish=2812:2812 --publish=6379:6370 echo &> echo_docker.log &
+$ sudo docker run --publish=80:80 --publish=2812:2812 echo &> echo_docker.log &
 ```
 
 To attach to the docker and run shell:
