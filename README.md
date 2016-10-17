@@ -46,12 +46,6 @@ $ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
 
 The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
 
-Access logs and error logs can be found inside the docker:
-```bash
-$ sudo docker exec -it $(sudo docker ps -a -q --filter ancestor=echo) tail -f /var/log/nginx-access.log
-$ sudo docker exec -it $(sudo docker ps -a -q --filter ancestor=echo) tail -f /var/log/nginx-error.log
-```
-
 #### Key naming
 
 By default, objects are cached in Redis with this key pattern: `object:escape_uri(${RequestURI})`; for exmaple, the following call:
