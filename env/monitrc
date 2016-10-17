@@ -1,30 +1,33 @@
 set init
-set daemon 3  # check every 3 seconds
+set daemon 10  # check every 10 seconds
 set logfile /var/log/monit.log
 set idfile /var/lib/monit/id
 set statefile /var/lib/monit/state
-set mailserver smtp.gmail.com port 465
+set mailserver smtp.gmail.com port 587
 username "sfdc.echo@gmail.com" password "CasperTheFriendlyGhost"
 using tlsv1 with timeout 30 seconds
 set eventqueue
 basedir /var/lib/monit/events 
 slots 100
-alerts if the the mail-format
 set httpd port 2812 
-allow admin:echo
-'admin' with password 'echo'
+allow admin:casp
 
-check process redis-server with pidfile /var/run/redis.pid
-  start program = "/etc/init.d/redis-server start"
-  stop program  = "/etc/init.d/redis-server stop"
+check process redis matching "/usr/bin/redis-server"
+  start program = "/etc/init.d/redis-server start" with timeout 5 seconds
+  stop program  = "/etc/init.d/redis-server stop" with timeout 5 seconds
+  if failed host 127.0.0.1 port 6379 then restart
   if 1 restarts within 1 cycles then alert 
   alert pteyer@salesforce.com { nonexist }
+  group redis
 
-# check process openresty with pidfile /var/run/echo-proxy.pid
-#   start program = "/etc/init.d/echo-proxy start"
-#   stop program  = "/etc/init.d/echo-proxy stop"
-#   if 1 restarts within 1 cycles then alert 
-#   alert pteyer@salesforce.com { nonexist }
+ check process nginx matching "/usr/local/openresty/bin/openresty"
+   start program = "/usr/local/openresty/bin/openresty" with timeout 5 seconds
+   stop program  = "/usr/local/openresty/bin/openresty -s quit" with timeout 5 seconds
+   if 1 restarts within 1 cycles then alert 
+   if failed host 127.0.0.1 port 80 then restart
+   if cpu is greater than 60% for 2 cycles then alert
+   if cpu > 80% for 5 cycles then restart 
+   if 10 restarts within 10 cycles then timeout
+   alert pteyer@salesforce.com { nonexist }
 
 include /etc/monit/conf.d/*
-
