@@ -13,26 +13,43 @@ Cached entries will be stored in Redis, which can be set-up in a Master-Slave co
 ### How to use?
 
 Clone repository and build docker:
-
 ```bash
 $ git clone git@git.soma.salesforce.com:CASP/echo.git
 $ cd echo/
 $ sudo docker build -t echo -f Dockerfile .
 ```
 
-To start Echo and expose docker's port 80 on parent host:
-
+To start Echo and expose port 80 for HTTP, 2812 for monitoring, 6379 for Redis:
 ```bash
-$ sudo docker run --publish=80:80 echo
+$ sudo docker run --publish=80:80 --publish=2812:2812 --publish=6379:6370 echo &> echo_docker.log &
+```
+
+To attach to the docker and run shell:
+```bash
+$ sudo docker exec -it $(sudo docker ps -a -q --filter ancestor=echo) /bin/bash
+```
+
+To stop Echo's docker:
+```bash
+$ sudo docker stop $(sudo docker ps -a -q --filter ancestor=echo)
+```
+
+To remove Echo's docker:
+```bash
+$ sudo docker rmi -f $(sudo docker images echo -a -q)
 ```
 
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
-
 ```bash
 $ curl -i -v -H 'Host: www.vim.org' 'http://127.0.0.1/'
 ```
 
 The response from the above call should contain header parameter `Echo-Cache-Status` with value `HIT` or `MISS`.
+
+Access logs and error logs can be found at:
+```bash
+
+```
 
 #### Key naming
 
