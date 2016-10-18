@@ -1,4 +1,4 @@
-# Echo - HTTP Reverse Proxy Cache
+# Echo - Invalidatable HTTP Reverse Proxy Cache
 
 ### Overview
 
