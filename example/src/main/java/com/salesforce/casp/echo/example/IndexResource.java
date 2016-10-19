@@ -26,7 +26,7 @@ public class IndexResource {
                 .build();
     }
 
-    @POST @Path("/{id}") @Produces(MediaType.TEXT_PLAIN)
+    @PUT @Path("/{id}") @Produces(MediaType.TEXT_PLAIN)
     public Response put(@PathParam("id") final String id, final String body) {
         store.put(id, body);
         lastId = id;
