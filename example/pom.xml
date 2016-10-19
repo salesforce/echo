@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.salesforce.casp</groupId>
+    <artifactId>echo-example</artifactId>
+    <packaging>pom</packaging>
+    <name>echo-example</name>
+    <version>0.1-SNAPSHOT</version>
+    <url>https://git.soma.salesforce.com/CASP/echo</url>
+
+    <description>Sample application for Echo</description>
+
+    <parent>
+        <groupId>com.force.commons</groupId>
+        <artifactId>commons-parent</artifactId>
+        <version>1.0.6</version>
+    </parent>
+
+    <properties>
+        <source.version>1.8</source.version>
+        <target.version>1.8</target.version>
+        <failIfNoTests>false</failIfNoTests>
+
+        <!--VERSIONS-->
+        <servlet.version>2.5</servlet.version>
+        <guava.version>18.0</guava.version>
+        <guice.version>4.1.0</guice.version>
+        <spring.version>4.2.5.RELEASE</spring.version>
+        <jersey.version>2.22.1</jersey.version>
+
+        <testng.version>6.9.10</testng.version>
+
+        <mvn.plugins.compiler.version>2.5.1</mvn.plugins.compiler.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <developers>
+        <developer>
+            <name>CASP team</name>
+            <organization>CASP</organization>
+            <organizationUrl>https://sites.google.com/a/salesforce.com/web-services-api/Home</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://git.soma.salesforce.com/CASP/echo.git</connection>
+        <developerConnection>scm:git:git@git.soma.salesforce.com:CASP/echo.git</developerConnection>
+        <url>https://git.soma.salesforce.com/CASP/echo</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <url>https://nexus.soma.salesforce.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-http</artifactId>
+            <version>${jersey.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-servlet</artifactId>
+            <version>${jersey.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--ASSEMBLY-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.3</version>
+                <executions>
+                    <execution>
+                        <id>make-echo-example</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>com.salesforce.casp.echo.example.Application</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>echo-example</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
