@@ -25,7 +25,7 @@ and 7379 for [Webdis](http://webd.is/) interface to [Redis](http://127.0.0.1:737
 $ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 --publish=7379:7379 sfdc/echo
 ```
 
-
+A simple Java example and the sample run results can be found [here](https://git.soma.salesforce.com/CASP/echo/tree/master/example). 
 
 To attach to the docker and run shell or tail access/error logs:
 ```bash
