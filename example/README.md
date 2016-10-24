@@ -6,5 +6,7 @@ $ mvn clean install
 $ java -jar target/echo-example.jar
 ```
 
-
+Sample run:
+```bash
+```
 
