@@ -11,7 +11,7 @@ public class IndexResource {
 
     private static final String objectObservablePrefix = "/sfdc/casp/echo/example/object-id-";
 
-    private static final Map<String, String> store = new ConcurrentHashMap<String, String>();
+    private static final Map<String, String> store = new ConcurrentHashMap<>();
 
     @POST
     public Response post(final String body) {
