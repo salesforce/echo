@@ -6,7 +6,7 @@
 
     <groupId>com.salesforce.casp</groupId>
     <artifactId>echo-example</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>echo-example</name>
     <version>0.1-SNAPSHOT</version>
     <url>https://git.soma.salesforce.com/CASP/echo</url>
@@ -83,19 +83,6 @@
 
     <build>
         <plugins>
-            <!--COMPILER-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${mvn.plugins.compiler.version}</version>
-                <configuration>
-                    <source>${source.version}</source>
-                    <target>${target.version}</target>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
             <!--ASSEMBLY-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
