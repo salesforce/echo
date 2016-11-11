@@ -1,16 +1,29 @@
 option java_package = "com.salesforce.casp.echo";
 option java_outer_classname = "Echo";
 
+enum HttpMethod {
+    GET = 1;
+    PUT = 2;
+    POST = 3;
+    DELETE = 4;
+    HEAD = 5;
+}
+
 message HttpHeader {
     required string name = 1;
     repeated string values = 2;
 }
 
-message HttpHeaders {
-    repeated HttpHeader headers = 1;
+message HttpRequest {
+    required HttpMethod method = 1;
+    required string uri = 2;
+    repeated HttpHeader headers = 3;
+    optional bytes body = 4;
 }
 
-message HttpEntity {
-    required bytes value = 1;
+message HttpResponse {
+    repeated HttpHeader headers = 1;
+    required int32 status_code = 2;
+    optional bytes body = 3;
 }
 

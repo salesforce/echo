@@ -1,12 +1,12 @@
 package com.salesforce.casp.echo.core;
 
+import com.salesforce.casp.echo.Echo;
+
 public interface IEchoCache {
 
-    void put(String key, byte[] value);
+    // lookup response for this request
+    Echo.HttpResponse get(Echo.HttpRequest request);
 
-    void expire(String key, long ttlMillis);
-
-    byte[] get(String key);
-
-    void delete(String key);
+    // cache response for this request
+    void put(Echo.HttpRequest request, Echo.HttpResponse response);
 }
