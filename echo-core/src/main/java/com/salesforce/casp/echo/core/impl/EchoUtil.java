@@ -51,6 +51,7 @@ public class EchoUtil {
                 .addAllHeaders(response.getHeaders().keySet().stream()
                         .map(h -> Echo.HttpHeader.newBuilder().setName(h).addAllValues((List) response.getHeaders().get(h)).build())
                         .collect(Collectors.toList()))
+                .setStatusCode(response.getStatus())
                 .build();
     }
 }
