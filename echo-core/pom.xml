@@ -9,13 +9,12 @@
     <parent>
         <groupId>com.salesforce.casp</groupId>
         <artifactId>echo-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>echo-core</artifactId>
     <packaging>jar</packaging>
     <name>echo-core</name>
-    <version>${project.version}</version>
     <url>https://git.soma.salesforce.com/CASP/echo</url>
 
     <dependencies>
