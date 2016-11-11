@@ -8,7 +8,7 @@
     <artifactId>echo-parent</artifactId>
     <packaging>pom</packaging>
     <name>echo-parent</name>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <url>https://git.soma.salesforce.com/CASP/echo</url>
 
     <description>Echo parent pom</description>
@@ -56,7 +56,7 @@
         <connection>scm:git:https://git.soma.salesforce.com/CASP/echo.git</connection>
         <developerConnection>scm:git:git@git.soma.salesforce.com:CASP/echo.git</developerConnection>
         <url>https://git.soma.salesforce.com/CASP/echo</url>
-        <tag>echo-parent-0.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
