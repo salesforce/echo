@@ -15,8 +15,22 @@
     <artifactId>echo-core</artifactId>
     <packaging>jar</packaging>
     <name>echo-core</name>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
     <url>https://git.soma.salesforce.com/CASP/echo</url>
+
+    <scm>
+        <connection>scm:git:https://git.soma.salesforce.com/CASP/echo.git</connection>
+        <developerConnection>scm:git:git@git.soma.salesforce.com:CASP/echo.git</developerConnection>
+        <url>https://git.soma.salesforce.com/CASP/echo</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <url>https://nexus.soma.salesforce.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -116,8 +130,5 @@
         </plugins>
     </build>
 
-  <scm>
-    <tag>echo-core-0.0.1</tag>
-  </scm>
 </project>
 
