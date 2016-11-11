@@ -1,0 +1,16 @@
+option java_package = "com.salesforce.casp.echo";
+option java_outer_classname = "Echo";
+
+message HttpHeader {
+    required string name = 1;
+    repeated string values = 2;
+}
+
+message HttpHeaders {
+    repeated HttpHeader headers = 1;
+}
+
+message HttpEntity {
+    required bytes value = 1;
+}
+
