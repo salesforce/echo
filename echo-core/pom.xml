@@ -115,9 +115,5 @@
             </plugin>
         </plugins>
     </build>
-
-  <scm>
-    <tag>echo-core-0.0.1</tag>
-  </scm>
 </project>
 
