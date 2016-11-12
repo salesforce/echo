@@ -19,9 +19,9 @@ public class EchoCacheOnEhcache extends AbstractBaseEchoCache implements IEchoCa
     public EchoCacheOnEhcache() {
         final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
         final MutableConfiguration<String, Echo.HttpResponse> configuration = new MutableConfiguration<String, Echo.HttpResponse>()
-                        .setTypes(String.class, Echo.HttpResponse.class)
-                        .setStoreByValue(false)
-                        .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_MINUTE));
+                .setTypes(String.class, Echo.HttpResponse.class)
+                .setStoreByValue(false)
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
         this.responseCache = cacheManager.createCache("echo-cache", configuration);
     }
 
@@ -38,3 +38,4 @@ public class EchoCacheOnEhcache extends AbstractBaseEchoCache implements IEchoCa
         this.responseCache.put(getKeyForRequest(request), response);
     }
 }
+
