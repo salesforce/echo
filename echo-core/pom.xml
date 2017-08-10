@@ -8,15 +8,25 @@
 
     <parent>
         <groupId>com.salesforce.casp</groupId>
-        <artifactId>echo-parent</artifactId>
-        <version>0.0.2</version>
+        <artifactId>casp-build</artifactId>
+        <version>0.0.13</version>
     </parent>
 
-    <artifactId>echo-core</artifactId>
+    <artifactId>echo</artifactId>
     <packaging>jar</packaging>
     <name>echo-core</name>
     <version>0.0.4-SNAPSHOT</version>
     <url>https://git.soma.salesforce.com/CASP/echo</url>
+
+    <properties>
+        <pmd.fails.on.validation>false</pmd.fails.on.validation>
+        <pmd.failure.priority>5</pmd.failure.priority>
+        <pmd.print.failing.errors>true</pmd.print.failing.errors>
+        <checkstyle.fails.on.validation>false</checkstyle.fails.on.validation>
+        <checkstyle.fails.on.error>false</checkstyle.fails.on.error>
+
+        <protoc.gen.grpc.version>1.0.1</protoc.gen.grpc.version>
+    </properties>
 
     <scm>
         <connection>scm:git:https://git.soma.salesforce.com/CASP/echo.git</connection>
@@ -40,34 +50,37 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
+            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
+            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
+            <version>1</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -100,29 +113,6 @@
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--PROTOC-->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-sources</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <tasks>
-                                <mkdir dir="target/generated-sources" />
-                                <exec failonerror="true" executable="protoc">
-                                    <arg value="--java_out=target/generated-sources" />
-                                    <arg value="src/main/resources/protos/echo.proto" />
-                                </exec>
-                            </tasks>
-                            <sourceRoot>target/generated-sources</sourceRoot>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>

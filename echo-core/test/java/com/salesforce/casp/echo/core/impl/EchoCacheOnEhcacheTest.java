@@ -1,10 +1,12 @@
 package com.salesforce.casp.echo.core.impl;
 
-import com.google.protobuf.ByteString;
-import com.salesforce.casp.echo.Echo;
+import com.salesforce.casp.echo.core.HttpRequest;
+import com.salesforce.casp.echo.core.HttpResponse;
 import com.salesforce.casp.echo.core.IEchoCache;
+import com.salesforce.casp.echo.core.cache.EchoCacheOnEhcache;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import static org.testng.Assert.*;
@@ -16,19 +18,11 @@ public class EchoCacheOnEhcacheTest {
         final IEchoCache cache = new EchoCacheOnEhcache();
 
         for (int i = 0; i < 1000; ++i) {
-            final Echo.HttpRequest request = Echo.HttpRequest.newBuilder()
-                    .setMethod(Echo.HttpMethod.GET)
-                    .setUri(UUID.randomUUID().toString())
-                    .build();
+            final HttpRequest request = new HttpRequest("lookup", UUID.randomUUID().toString(), Arrays.asList());
+            final HttpResponse response = new HttpResponse(null, 100, UUID.randomUUID().toString(), 1000, 1000);
 
-            final Echo.HttpResponse response = Echo.HttpResponse.newBuilder()
-                    .addHeaders(Echo.HttpHeader.newBuilder().setName(UUID.randomUUID().toString()).addValues(UUID.randomUUID().toString()))
-                    .setStatusCode(200)
-                    .setBody(ByteString.copyFrom(UUID.randomUUID().toString().getBytes()))
-                    .build();
-
-            cache.put(request, response);
-            assertEquals(cache.get(request), response);
+            cache.store(request, response);
+            assertEquals(cache.lookup(request), response);
         }
     }
 }

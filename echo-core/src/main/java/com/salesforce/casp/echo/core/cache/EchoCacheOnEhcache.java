@@ -1,6 +1,7 @@
-package com.salesforce.casp.echo.core.impl;
+package com.salesforce.casp.echo.core.cache;
 
-import com.salesforce.casp.echo.Echo;
+import com.salesforce.casp.echo.core.HttpRequest;
+import com.salesforce.casp.echo.core.HttpResponse;
 import com.salesforce.casp.echo.core.IEchoCache;
 
 import javax.cache.Cache;
@@ -14,28 +15,35 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class EchoCacheOnEhcache extends AbstractBaseEchoCache implements IEchoCache {
 
-    private final Cache<String, Echo.HttpResponse> responseCache;
+    private final Cache<HttpRequest, HttpResponse> responseCache;
 
     public EchoCacheOnEhcache() {
         final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
-        final MutableConfiguration<String, Echo.HttpResponse> configuration = new MutableConfiguration<String, Echo.HttpResponse>()
-                .setTypes(String.class, Echo.HttpResponse.class)
+        final MutableConfiguration<HttpRequest, HttpResponse> configuration = new MutableConfiguration<HttpRequest, HttpResponse>()
+                .setTypes(HttpRequest.class, HttpResponse.class)
                 .setStoreByValue(false)
                 .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_DAY));
         this.responseCache = cacheManager.createCache("echo-cache", configuration);
     }
 
     @Override
-    public Echo.HttpResponse get(final Echo.HttpRequest request) {
+    public HttpResponse lookup(final HttpRequest request) {
         checkArgument(request != null, "null request");
-        return this.responseCache.get(getKeyForRequest(request));
+        return this.responseCache.get(request);
     }
 
     @Override
-    public void put(final Echo.HttpRequest request, final Echo.HttpResponse response) {
+    public void store(final HttpRequest request, final HttpResponse response) {
         checkArgument(request != null, "null request");
         checkArgument(response != null, "null response");
-        this.responseCache.put(getKeyForRequest(request), response);
+        this.responseCache.put(request, response);
+    }
+
+    @Override
+    public void invalidate(final HttpRequest request, final HttpResponse response) {
+        checkArgument(request != null, "null request");
+        checkArgument(response != null, "null response");
+        this.responseCache.remove(request);
     }
 }
 

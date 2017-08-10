@@ -1,12 +1,13 @@
 package com.salesforce.casp.echo.core;
 
-import com.salesforce.casp.echo.Echo;
-
 public interface IEchoCache {
 
     // lookup response for this request
-    Echo.HttpResponse get(Echo.HttpRequest request);
+    HttpResponse lookup(HttpRequest request);
 
     // cache response for this request
-    void put(Echo.HttpRequest request, Echo.HttpResponse response);
+    void store(HttpRequest request, HttpResponse response);
+
+    // invalidate cached response for the given request
+    void invalidate(HttpRequest request, HttpResponse response);
 }
