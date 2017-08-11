@@ -57,8 +57,7 @@ public class HttpResponse {
                 && Objects.equals(getStatusCode(), other.getStatusCode())
                 && Objects.equals(getEntity(), other.getEntity())
                 && Objects.equals(getUpdateTimestampMillis(), other.getUpdateTimestampMillis())
-                && Objects.equals(getExpireTimestampMillis(), other.getExpireTimestampMillis())
-                ;
+                && Objects.equals(getExpireTimestampMillis(), other.getExpireTimestampMillis());
     }
 
     @Override
@@ -67,8 +66,7 @@ public class HttpResponse {
                 getStatusCode(),
                 getEntity(),
                 getUpdateTimestampMillis(),
-                getExpireTimestampMillis())
-                ;
+                getExpireTimestampMillis());
     }
 
     @Override

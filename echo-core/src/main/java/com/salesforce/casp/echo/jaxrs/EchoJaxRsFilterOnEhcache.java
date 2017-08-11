@@ -1,4 +1,4 @@
-package com.salesforce.casp.echo.core.jaxrs;
+package com.salesforce.casp.echo.jaxrs;
 
 import com.salesforce.casp.echo.core.HttpRequest;
 import com.salesforce.casp.echo.core.HttpResponse;
@@ -12,25 +12,25 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 @Priority(Priorities.ENTITY_CODER)
-public class EchoFilterOnEhcache extends AbstractBaseEchoFilter {
+public class EchoJaxRsFilterOnEhcache extends AbstractBaseEchoFilter {
     protected static final IEchoCache cache = new EchoCacheOnEhcache();
 
-    public EchoFilterOnEhcache() {
+    public EchoJaxRsFilterOnEhcache() {
         LoggerFactory.getLogger(getClass()).info("echo cache filter initialized...");
     }
 
     @Override
-    protected HttpResponse lookup(final HttpRequest request) {
+    public HttpResponse lookup(final HttpRequest request) {
         return cache.lookup(request);
     }
 
     @Override
-    protected void store(final HttpRequest request, final HttpResponse response) {
+    public void store(final HttpRequest request, final HttpResponse response) {
         cache.store(request, response);
     }
 
     @Override
-    protected void invalidate(final HttpRequest request, final HttpResponse cachedResponse) {
+    public void invalidate(final HttpRequest request, final HttpResponse cachedResponse) {
         cache.invalidate(request, cachedResponse);
     }
 }

@@ -1,9 +1,6 @@
-package com.salesforce.casp.echo.core.jaxrs;
+package com.salesforce.casp.echo.jaxrs;
 
-import com.salesforce.casp.echo.core.Constants;
-import com.salesforce.casp.echo.core.HttpHeader;
-import com.salesforce.casp.echo.core.HttpRequest;
-import com.salesforce.casp.echo.core.HttpResponse;
+import com.salesforce.casp.echo.core.*;
 import com.salesforce.casp.echo.core.cache.EchoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +12,7 @@ import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-public abstract class AbstractBaseEchoFilter implements ContainerRequestFilter, ContainerResponseFilter {
+abstract class AbstractBaseEchoFilter implements EchoFilter, ContainerRequestFilter, ContainerResponseFilter {
 
     protected static final Logger logger = LoggerFactory.getLogger(AbstractBaseEchoFilter.class);
 
@@ -84,10 +81,4 @@ public abstract class AbstractBaseEchoFilter implements ContainerRequestFilter, 
         return true;
         // TODO check for all headers
     }
-
-    protected abstract HttpResponse lookup(final HttpRequest request);
-
-    protected abstract void store(final HttpRequest request, final HttpResponse response);
-
-    protected abstract void invalidate(final HttpRequest request, final HttpResponse cachedResponse);
 }

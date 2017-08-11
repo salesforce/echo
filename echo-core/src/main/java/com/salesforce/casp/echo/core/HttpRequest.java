@@ -39,8 +39,7 @@ public class HttpRequest {
         final HttpRequest other = (HttpRequest) o;
         return Objects.equals(getUri(), other.getUri())
                 && Objects.equals(getMethod(), other.getMethod())
-                && Objects.equals(getHeaders(), other.getHeaders())
-                ;
+                && Objects.equals(getHeaders(), other.getHeaders());
     }
 
     @Override
