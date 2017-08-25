@@ -14,7 +14,7 @@
 
     <artifactId>echo</artifactId>
     <packaging>jar</packaging>
-    <name>echo-core</name>
+    <name>echo</name>
     <version>0.0.4-SNAPSHOT</version>
     <url>https://git.soma.salesforce.com/CASP/echo</url>
 
@@ -52,30 +52,16 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
         </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.2</version>
-        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
         <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
-            <version>RELEASE</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.ehcache</groupId>
+            <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

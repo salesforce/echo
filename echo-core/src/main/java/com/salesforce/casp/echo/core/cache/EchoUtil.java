@@ -6,8 +6,8 @@ import com.salesforce.casp.echo.core.HttpRequest;
 import com.salesforce.casp.echo.core.HttpResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,18 +15,15 @@ import java.util.stream.Collectors;
 public class EchoUtil {
 
     public static HttpRequest toRequest(final HttpServletRequest request) {
+        final StringBuffer requestURL = request.getRequestURL();
+        if (request.getQueryString() != null) {
+            requestURL.append("?").append(request.getQueryString());
+        }
+        final String url = requestURL.toString();
         return new HttpRequest(request.getMethod(),
-                request.getRequestURI(),
+                url,
                 Collections.list(request.getHeaderNames()).stream()
                         .map(h -> new HttpHeader(h, Collections.list(request.getHeaders(h))))
-                        .collect(Collectors.toList()));
-    }
-
-    public static HttpRequest toRequest(final ContainerRequestContext request) {
-        return new HttpRequest(request.getMethod(),
-                request.getUriInfo().getRequestUri().toString(),
-                request.getHeaders().keySet().stream()
-                        .map(h -> new HttpHeader(h, request.getHeaders().get(h)))
                         .collect(Collectors.toList()));
     }
 
@@ -50,18 +47,30 @@ public class EchoUtil {
         return ttl;
     }
 
-    public static String getHash(final byte[] bytes) {
+    static String getHash(final byte[] bytes) {
         return Hashing.murmur3_128().hashBytes(bytes) + ":" + Hashing.crc32().hashBytes(bytes);
     }
 
-    public static HttpResponse toResponse(final ContainerResponseContext response) {
-        final List<HttpHeader> headers = response.getHeaders().keySet().stream()
-                .map(h -> new HttpHeader(h, response.getHeaders().get(h)))
-                .collect(Collectors.toList());
+    public static HttpResponse toResponse(final HttpServletResponse response) {
+        final List<HttpHeader> headers = getHeaders(response);
         final long timestamp = System.currentTimeMillis();
         return new HttpResponse(headers, response.getStatus(),
-                response.getEntity(), timestamp,
+                "test".getBytes(), timestamp,
                 timestamp + getTtl(headers) * 1_000_000);
+    }
+
+    public static List<HttpHeader> getHeaders(final HttpServletRequest request) {
+        return Collections.list(request.getHeaderNames()).stream()
+                .map(h -> new HttpHeader(h, Collections.list(request.getHeaders(h))))
+                .collect(Collectors.toList());
+    }
+
+    public static List<HttpHeader> getHeaders(final HttpServletResponse response) {
+        final List<HttpHeader> headers = new ArrayList<>();
+        for (final String headerName : response.getHeaderNames()) {
+            headers.add(new HttpHeader(headerName, (List) response.getHeaders(headerName)));
+        }
+        return headers;
     }
 }
 

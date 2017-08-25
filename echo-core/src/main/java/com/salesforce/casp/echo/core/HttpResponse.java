@@ -2,19 +2,20 @@ package com.salesforce.casp.echo.core;
 
 import com.google.common.base.MoreObjects;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class HttpResponse {
     private final List<HttpHeader> headers;
     private final int statusCode;
-    private final Object entity;
+    private final byte[] entity;
     private final long updateTimestampMillis;
     private final long expireTimestampMillis;
 
     public HttpResponse(final List<HttpHeader> headers,
                         int statusCode,
-                        final Object entity,
+                        final byte[] entity,
                         long update_timestamp_millis,
                         long expire_timestamp_millis) {
         this.headers = headers;
@@ -32,7 +33,7 @@ public class HttpResponse {
         return statusCode;
     }
 
-    public Object getEntity() {
+    public byte[] getEntity() {
         return entity;
     }
 
@@ -55,7 +56,7 @@ public class HttpResponse {
         final HttpResponse other = (HttpResponse) o;
         return Objects.equals(getHeaders(), other.getHeaders())
                 && Objects.equals(getStatusCode(), other.getStatusCode())
-                && Objects.equals(getEntity(), other.getEntity())
+                && Arrays.equals(getEntity(), other.getEntity())
                 && Objects.equals(getUpdateTimestampMillis(), other.getUpdateTimestampMillis())
                 && Objects.equals(getExpireTimestampMillis(), other.getExpireTimestampMillis());
     }
