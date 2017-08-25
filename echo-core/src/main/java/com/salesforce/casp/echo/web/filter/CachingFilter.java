@@ -183,7 +183,6 @@ public abstract class CachingFilter extends AbstractBaseFilter {
             throw new AlreadyCommittedException(
                     "Response already committed before doing buildPage.");
         }
-        logRequestHeaders(request);
         PageInfo pageInfo = buildPageInfo(request, response, chain);
 
         if (pageInfo.isOk()) {
