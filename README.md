@@ -2,8 +2,6 @@
 
 ### Overview
 
-Full specification can be found here [Echo - HTTP Reverse Proxy Cache](https://sfdc.co/echo).
-
 Echo is an HTTP Reverse Proxy Cache that reduces request latencies and down stream resource usage by providing a HTTP request/response cache for previously executed remote HTTP calls.  Echo intercepts requests from clients, performs response lookup in the Echo cache, and if found, returns the cached response to the caller.  On a cache miss, the request is forwarded to the specified passthrough service that processes the request.  Echo will intercept the response and depending on a set of custom header parameters, caches the corresponding response and possibly invalidates older responses.  Then it will return the response to the caller.  Note that all operations are handled asynchronously.  On subsequent requests the response contents are served directly from the cache, eliminating the call to the backend service. 
 
 Cached content can be static or dynamic as Echo provides invalidation capabilities that allow backend services to notify Echo when the cached entry is stale.  Object invalidation matching is done through patterns (regular expressions) or observables (representing a composite object dependency graph) allowing bulk invalidations for an org/user/etc. and object graph invalidation to be possible.  
@@ -14,7 +12,7 @@ Cached entries will be stored in Redis, which can be set-up in a Master-Slave co
 
 Clone repository and build docker:
 ```bash
-$ git clone git@git.soma.salesforce.com:CASP/echo.git
+$ git clone git@github.com:salesforce/echo.git
 $ cd echo/
 $ sudo docker build -t sfdc/echo -f Dockerfile .
 ```
@@ -25,7 +23,7 @@ and 7379 for [Webdis](http://webd.is/) interface to [Redis](http://127.0.0.1:737
 $ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 --publish=7379:7379 sfdc/echo
 ```
 
-A simple Java example and the sample run results can be found [here](https://git.soma.salesforce.com/CASP/echo/tree/master/example). 
+A simple Java example and the sample run results can be found [here](https://github.com/salesforce/echo/tree/master/example). 
 
 To attach to the docker and run shell or tail access/error logs:
 ```bash
