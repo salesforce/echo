@@ -20,14 +20,6 @@ check process redis matching "/usr/bin/redis-server"
   alert pteyer@salesforce.com { nonexist }
   group redis
 
-check process webdis matching "/opt/webdis/webdis"
-  start program = "/opt/webdis/webdis /opt/webdis/webdis.json" with timeout 5 seconds
-  stop program  = "/bin/kill $(/bin/pidof /opt/webdis/webdis)" with timeout 5 seconds
-  if failed host 127.0.0.1 port 7379 then restart
-  if 1 restarts within 1 cycles then alert 
-  alert pteyer@salesforce.com { nonexist }
-  group redis
-
 check process nginx matching "/usr/local/openresty/bin/openresty"
   start program = "/usr/local/openresty/bin/openresty" with timeout 5 seconds
   stop program  = "/usr/local/openresty/bin/openresty -s quit" with timeout 5 seconds
