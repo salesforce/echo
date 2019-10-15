@@ -3,9 +3,6 @@ set daemon 10  # check every 10 seconds
 set logfile /var/log/monit.log
 set idfile /var/lib/monit/id
 set statefile /var/lib/monit/state
-set mailserver smtp.gmail.com port 587
-username "sfdc.echo@gmail.com" password "CasperTheFriendlyGhost"
-using tlsv1 with timeout 30 seconds
 set eventqueue
 basedir /var/lib/monit/events 
 slots 100
