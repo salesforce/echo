@@ -2,11 +2,20 @@
 
 ### Overview
 
-Echo is an HTTP Reverse Proxy Cache that reduces request latencies and down stream resource usage by providing a HTTP request/response cache for previously executed remote HTTP calls.  Echo intercepts requests from clients, performs response lookup in the Echo cache, and if found, returns the cached response to the caller.  On a cache miss, the request is forwarded to the specified passthrough service that processes the request.  Echo will intercept the response and depending on a set of custom header parameters, caches the corresponding response and possibly invalidates older responses.  Then it will return the response to the caller.  Note that all operations are handled asynchronously.  On subsequent requests the response contents are served directly from the cache, eliminating the call to the backend service. 
+Echo is a PoC of an Invalidatable HTTP Reverse Proxy Cache; it is implemented as a simple Lua script on top of Nginx and Redis.
 
-Cached content can be static or dynamic as Echo provides invalidation capabilities that allow backend services to notify Echo when the cached entry is stale.  Object invalidation matching is done through patterns (regular expressions) or observables (representing a composite object dependency graph) allowing bulk invalidations for an org/user/etc. and object graph invalidation to be possible.  
+Similar to other reverse proxy caches, Nginx intercepts requests from clients, performs response lookup in the cache (i.e., Redis), 
+and if found returns the cached response to the caller; on a cache miss the request is forwarded to the specified upstream service 
+that processes the request and returns a response which is subsequently forwarded back to the client, and also stored in the cache 
+(if cachable). 
 
-Cached entries will be stored in Redis, which can be set-up in a Master-Slave configuration.  This configuration, allows for Redis to be scaled-out horizontally as more processing capacity is needed.  Also, cached entries as well as invalidations, need to occur on the master node, and the corresponding changes will be pushed by master to all Redis slaves, simplifying the invalidation logic.
+Echo adds an additional step here: the response from the upstream service can potentially contain one or more Echo-specific header 
+parameters; these parameters are only understandable by Echo, and are meant to allow response objects to directly interact with Nginx; 
+making it possible for server side applications to execute custom operations on the HTTP caching layer.
+
+For example, response header parameters can be used to instruct Nginx to invalidate and remove cached objects matching a regular
+expression from the cache store. They can also be used to construct an object dependency graph, effectively allowing services to 
+invalidate all cached responses that are dependent on a certain entity/resource.
 
 ### How to use?
 
@@ -75,7 +84,9 @@ $ redis-cli keys '*'
 1) "object:gs0.salesforce.com%2Fhome%2Fhome.jsp"
 ```
 
-However, it is possible to overwrite the _key pattern_ used to store cached objects in Redis via the header parameter `Echo-Key`; for exmaple, adding `Echo-Key: gs0/home/home.jsp` to response header results in the above _curl_ call to be cached in Redis like this:
+However, it is possible to overwrite the _key pattern_ used to store cached objects in Redis via the header 
+parameter `Echo-Key`; for exmaple, adding `Echo-Key: gs0/home/home.jsp` to response header results in the above 
+_curl_ call to be cached in Redis like this:
 ```bash
 $ redis-cli keys '*'
 1) "object:gs0/home/home.jsp"
@@ -83,12 +94,22 @@ $ redis-cli keys '*'
 
 #### Object expiry
 
-By default, objects in cache are expired respectful of Cache-Control header.  However, it is possible to overwrite the cache expiry via the header parameter `Echo-Expire`; for example, adding `Echo-Expire: 30` to response header results in the cached objects to expire (deleted from Redis) after 30 seconds.
+By default, objects in cache are expired respectful of Cache-Control header.  However, it is possible to overwrite 
+the cache expiry via the header parameter `Echo-Expire`; for example, adding `Echo-Expire: 30` to response header 
+results in the cached objects to expire (deleted from Redis) after 30 seconds.
 
 #### Invalidation
 
-It is possible for backend services to explicitly invalidate cached objects matching a pattern.  This can be achieved by adding `Echo-Invalidate` header parameter to response.  For example, adding `Echo-Invalidate: *` results in all cached objects to be removed from Echo (Redis); or adding `Echo-Invalidate: gs0/home/*` results in all keys prefixed with `gs0/home/` to be removed.
+It is possible for backend services to explicitly invalidate cached objects matching a pattern.  This can be achieved 
+by adding `Echo-Invalidate` header parameter to response.  For example, adding `Echo-Invalidate: *` results in all cached 
+objects to be removed from Echo (Redis); or adding `Echo-Invalidate: gs0/home/*` results in all keys prefixed with `gs0/home/` 
+to be removed.
 
 #### Observables
 
-Echo provides functionality required to construct and invalidate _object dependency graphs_.  The dependency graph is constructed by adding a header parameter to reponse: `Echo-Observe`; for example, adding `Echo-Observe: /sfdc/casp/foo/bar` results in constructing an observable object graph in Echo called `/sfdc/casp/foo/bar`.  It is then possible for another response to invalidate the observers by adding the header parameter: `Echo-Notify`; for example: `Echo-Notify: /sfdc/casp/foo/bar` results in invalidation of all keys observing the given name.
+Echo provides functionality required to construct and invalidate _object dependency graphs_.  The dependency graph is 
+constructed by adding a header parameter to reponse: `Echo-Observe`; for example, adding `Echo-Observe: /sfdc/casp/foo/bar` 
+results in constructing an observable object graph in Echo called `/sfdc/casp/foo/bar`.  It is then possible for another 
+response to invalidate the observers by adding the header parameter: `Echo-Notify`; 
+for example: `Echo-Notify: /sfdc/casp/foo/bar` results in invalidation of all keys observing the given name.
+
