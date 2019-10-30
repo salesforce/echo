@@ -23,29 +23,29 @@ Clone repository and build docker:
 ```bash
 $ git clone git@github.com:salesforce/echo.git
 $ cd echo/
-$ sudo docker build -t sfdc/echo -f Dockerfile .
+$ docker build -t sfdc/echo -f Dockerfile .
 ```
 
-To start Echo and expose port 80 for HTTP proxy, 2812 for [monitoring](http://127.0.0.1:2812/):
+To start and expose port 80 for HTTP proxy, 2812 for [monitoring](http://127.0.0.1:2812/):
 ```bash
-$ sudo docker run -d --name echo --publish=80:80 --publish=2812:2812 sfdc/echo
+$ docker run -d --name echo --publish=80:80 --publish=2812:2812 sfdc/echo
 ```
 
 A simple Java example and the sample run results can be found [here](https://github.com/salesforce/echo/tree/master/example). 
 
 To attach to the docker and run shell or tail access/error logs:
 ```bash
-$ sudo docker exec -it echo /bin/bash
-$ sudo docker exec -it echo tail -f /var/log/nginx-access.log
-$ sudo docker exec -it echo tail -f /var/log/nginx-error.log
+$ docker exec -it echo /bin/bash
+$ docker exec -it echo tail -f /var/log/nginx-access.log
+$ docker exec -it echo tail -f /var/log/nginx-error.log
 ```
 
 To stop/kill/restart/remove Echo's docker:
 ```bash
-$ sudo docker stop echo
-$ sudo docker kill echo
-$ sudo docker restart echo
-$ sudo docker rm echo
+$ docker stop echo
+$ docker kill echo
+$ docker restart echo
+$ docker rm echo
 ```
 
 To use Echo, add `Host` header parameter pointing at the upstream hostname; e.g.,
