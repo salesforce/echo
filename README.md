@@ -1,5 +1,8 @@
 # Echo - Invalidatable HTTP Reverse Proxy Cache
 
+| WARNING: This repository is no longer maintained. |
+| --- |
+
 ### Overview
 
 Echo is a PoC of an Invalidatable HTTP Reverse Proxy Cache; it is implemented as a simple Lua script on top of Nginx and Redis.
